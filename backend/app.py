@@ -1,21 +1,32 @@
-
 from flask import Flask, request, jsonify
+from flask_migrate import Migrate
 import qrcode
 import io
 import re
 import base64
-from models import QRCode
-from db import db
+
+from models import db, QRCode
+from config import Config
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+# Initialize extensions
+db.init_app(app)
+migrate = Migrate(app, db)
 
 
 def is_valid_url(url):
+    """
+    Validates the URL using a regular expression.
+    """
     regex = re.compile(
-        r'^(https?:\/\/)'
-        r'((([A-Za-z0-9-]+\.)+[A-Za-z]{2,})|'
-        r'localhost|'
-        r'(\d{1,3}\.){3}\d{1,3})'
-        r'(:\d+)?'
-        r'(\/\S*)?$', re.IGNORECASE)
+        r'^(https?:\/\/)'  # Must start with http:// or https://
+        r'((([A-Za-z0-9-]+\.)+[A-Za-z]{2,})|'  # Domain...
+        r'localhost|'                          # or localhost...
+        r'(\d{1,3}\.){3}\d{1,3})'              # or an IP address
+        r'(:\d+)?'                            # Optional port
+        r'(\/\S*)?$', re.IGNORECASE)           # Optional path
     return re.match(regex, url) is not None
 
 
@@ -29,7 +40,7 @@ def generate_qr():
     if not is_valid_url(url):
         return jsonify({'error': 'Invalid URL provided'}), 400
 
-    # Generate the QR code
+    # Generate QR code using the qrcode library
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -46,16 +57,15 @@ def generate_qr():
     buf.seek(0)
     img_data = buf.getvalue()
 
-    # Optionally, store the record in the database
+    # Optionally, store the generated QR code in the database
     qr_record = QRCode(url=url, qr_image=img_data)
     db.session.add(qr_record)
     db.session.commit()
 
-    # Return the image as a Base64 encoded string
+    # Return the QR code as a Base64 encoded string in a JSON response
     img_base64 = base64.b64encode(img_data).decode('utf-8')
     return jsonify({'qr_code': img_base64})
 
 
 if __name__ == '__main__':
-    db.create_all()
     app.run(debug=True)
