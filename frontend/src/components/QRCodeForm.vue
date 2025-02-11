@@ -79,8 +79,6 @@ const emit = defineEmits(['generated', 'error'])
   font-size: 1rem;
   line-height: 1.5;
   color: #4a5568;
-  width: 50%;
-  height: 50%;
 }
 
 .qr-form {

@@ -51,7 +51,7 @@ const closeNotification = () => {
 <style scoped>
 .container {
   min-height: 100vh;
-  background-color: #f7fafc;
+  /* background-color: #f7fafc; */
   padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
@@ -66,6 +66,8 @@ const closeNotification = () => {
 }
 
 .background {
+  width: 650px !important;
+  height: 650px !important;
   position: absolute;
   inset: 0;
   background: linear-gradient(to right, #22d3ee, #3b82f6);
@@ -77,8 +79,12 @@ const closeNotification = () => {
 }
 
 .content {
+  width: 550px !important;
+  height: 550px !important;
   position: relative;
-  padding: 2.5rem;
+  padding: 3rem;
+  margin-top: 20px;
+  margin-left: 25px;
   background-color: white;
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -100,5 +106,20 @@ const closeNotification = () => {
   border-top: 1px solid #e5e7eb;
   margin-top: 1rem;
   padding-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .inner-container {
+    max-width: 95%; /* Take up more screen width on smaller screens */
+    padding: 0.75rem;
+  }
+
+  .content {
+    padding: 1.5rem; /* Further reduced padding */
+  }
+
+  .title {
+    font-size: 1rem; /* Even smaller title font */
+  }
 }
 </style>
