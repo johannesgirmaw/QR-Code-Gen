@@ -1,14 +1,20 @@
-from flask import Flask, request, jsonify
-from flask_migrate import Migrate
-import qrcode
-import io
-import re
-import base64
-
-from models import db, QRCode
+from utils import is_valid_url
 from config import Config
-
+from models import db, QRCode
+import base64
+import re
+import io
+import qrcode
+from flask_migrate import Migrate
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 app = Flask(__name__)
+print("================================================")
+# Adjust the origin as needed
+CORS(app)
+app = Flask(__name__)
+# Adjust the origin as needed
+CORS(app)
 app.config.from_object(Config)
 
 # Initialize extensions
@@ -16,21 +22,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-def is_valid_url(url):
-    """
-    Validates the URL using a regular expression.
-    """
-    regex = re.compile(
-        r'^(https?:\/\/)'  # Must start with http:// or https://
-        r'((([A-Za-z0-9-]+\.)+[A-Za-z]{2,})|'  # Domain...
-        r'localhost|'                          # or localhost...
-        r'(\d{1,3}\.){3}\d{1,3})'              # or an IP address
-        r'(:\d+)?'                            # Optional port
-        r'(\/\S*)?$', re.IGNORECASE)           # Optional path
-    return re.match(regex, url) is not None
-
-
-@app.route('/api/generate_qr', methods=['POST'])
+@app.route('/api/generate-qr/', methods=['POST'])
 def generate_qr():
     data = request.get_json()
     if not data or 'url' not in data:
