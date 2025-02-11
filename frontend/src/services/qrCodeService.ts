@@ -12,6 +12,7 @@ export const useQRCodeService = () => {
   const generateQRCode = async (url: string): Promise<string> => {
     try {
       const response = await axiosInstance.post('/api/generate-qr/', { url })
+      console.log('================================', response)
       return response.data.qrCode
     } catch (error) {
       console.error('Error generating QR code:', error)

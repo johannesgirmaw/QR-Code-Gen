@@ -33,6 +33,7 @@ const notificationMessage = ref('')
 const notificationType = ref('')
 
 const onQRCodeGenerated = (generatedQRCode) => {
+  console.log(generatedQRCode)
   qrCode.value = generatedQRCode
 }
 

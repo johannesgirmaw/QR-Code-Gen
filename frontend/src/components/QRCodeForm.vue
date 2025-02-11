@@ -43,25 +43,33 @@ const validateURL = (url) => {
 
 const generateQRCode = async () => {
   errors.url = ''
+  console.log('Starting QR code generation for:', url.value) // Log the URL
 
   if (!url.value) {
     errors.url = 'URL is required'
+    console.log('URL is missing:', errors.url) // Log the error
     return
   }
 
   if (!validateURL(url.value)) {
     errors.url = 'Please enter a valid URL'
+    console.log('URL is invalid:', errors.url) // Log the error
     return
   }
 
   try {
+    console.log('Calling qrCodeService...') // Log before the service call
     const qrCode = await qrCodeService.generateQRCode(url.value)
+    console.log('QR Code generated:', qrCode) // Log the result
+
     emit('generated', qrCode)
+    console.log("Emitted 'generated' event") // Log after emitting
   } catch (error) {
-    emit('error', error.message || 'An error occurred while generating the QR code')
+    console.error('Error generating QR code:', error) // Use console.error for errors
+    emit('error', error.message || 'An error occurred ...')
+    console.log("Emitted 'error' event") // Log after emitting
   }
 }
-
 const emit = defineEmits(['generated', 'error'])
 </script>
 
@@ -71,6 +79,8 @@ const emit = defineEmits(['generated', 'error'])
   font-size: 1rem;
   line-height: 1.5;
   color: #4a5568;
+  width: 50%;
+  height: 50%;
 }
 
 .qr-form {
