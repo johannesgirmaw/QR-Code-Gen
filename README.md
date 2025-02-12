@@ -157,18 +157,10 @@ These instructions use PostgreSQL as an example. Adapt as needed for your chosen
 3.  **Development Server (Optional):** If your frontend framework has a development server (like `npm run serve` for Vue.js or `npm start` for React), you can start it:
 
     ```bash
-    npm run serve  # Or the appropriate command for your framework
+    npm run dev # Or the appropriate command for your framework
     ```
 
     This will usually run the frontend on a separate port (e.g., `http://localhost:8080`).
-
-4.  **Building for Production (Important):** Before deploying, you'll need to build your frontend.  This will create optimized files for production:
-
-    ```bash
-    npm run build # Or the appropriate build command for your framework (e.g., yarn build)
-    ```
-
-    The built files will usually be placed in a `dist` or `build` directory within your frontend folder.
 
 5.  **Integrating with Flask:**  Copy the contents of the `dist` or `build` directory (the output of the build command) into the `static` folder of your Flask project.  This is how Flask will serve your static files (including your built frontend application).
 
